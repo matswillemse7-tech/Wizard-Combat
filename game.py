@@ -110,12 +110,17 @@ def draw_background():
     pygame.draw.rect(screen, (100,100,100), pygame.Rect(5 * 40, 0 * 40, 20 * 40+1, 20 * 40), 1)  # Outer border
 
 def draw_units():
+    global keys, see_faction
     for y in range(20):
         for x in range(20):
             unit_name = str(map[x, y]["Name"])
             if unit_name and unit_name in IMAGES:
                 draw_image(IMAGES[map[x,y]['Name']], (x+5) * 40 + 20, (y) * 40 + 20, 0, 32)
-
+            if (map[x,y]['Faction'] != 1) & (map[x,y]['Faction'] != 0) & see_faction:
+                draw_image(IMAGES['enemy'], (x+5) * 40 + 28, (y) * 40 + 12, 0, 32)
+            if (map[x,y]['Faction'] == 1 ) & see_faction:
+                draw_image(IMAGES['friend'], (x+5) * 40 + 28, (y) * 40 + 12, 0, 32)
+                
 
 
 
@@ -130,6 +135,10 @@ def draw_turn_stuff(x, y):
     pygame.draw.rect(screen, (50, 30, 40), pygame.Rect(1002, 138, 198, 32),4) 
     pygame.draw.rect(screen, (200, 0, 0), pygame.Rect(1004, 142, 194*(map[x,y]['Health']/map[x,y]['Maxhealth']), 24)) 
     draw_text(f'{map[x,y]['Health']}/{map[x,y]['Maxhealth']}', pixel_font,(255, 200, 200), 1100, 154)
+    if map[x,y]['Abilities'] != 0:
+        for i, ability in enumerate(map[x,y]['Abilities']):
+            pygame.draw.rect(screen, (80, 80, 100), pygame.Rect(1004, 175+(i*124), 192, 120))
+            pygame.draw.rect(screen, (60, 60, 100), pygame.Rect(1004, 175+(i*124), 192, 120), 4)   
 
 
 
@@ -156,7 +165,19 @@ def unit_turn():
     
     draw_turn_stuff(x, y)
 
-
+def key_toggles():
+    global keys, see_faction, key_pressed
+    
+    if keys[pygame.K_LALT]:
+        if key_pressed[0] == 0:
+            key_pressed[0] = 1
+            if see_faction == True:
+                see_faction = False
+            elif see_faction == False:
+                see_faction = True
+    else:
+        key_pressed[0] = 0
+    
 
 
     
@@ -165,19 +186,25 @@ def unit_turn():
 
 
 def game_loop():
-    global running, full_turn, round_number
+    global running, full_turn, round_number, mouse_buttons, keys,see_faction, key_pressed
+    key_pressed = [0]
     # Main loop
     running = True
-    
+    see_faction = True
     full_turn = 1; round_number = 0
     define_background()
-    create_unit(1, 0, 5, 5)
+    create_unit(1, 2, 5, 5)
     create_unit(0, 1, 2, 2)
 
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
+
+        mouse_buttons = pygame.mouse.get_pressed()
+        keys = pygame.key.get_pressed()
+        key_toggles()
+
 
 
         if full_turn == 1:
