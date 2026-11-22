@@ -17,6 +17,7 @@ Massive_font = pygame.font.Font(None, 200)
 title_font = pygame.font.Font(None, 74)
 text_font = pygame.font.Font(None, 36)
 bold_font = pygame.font.Font(None, 44)
+pixel_font = pygame.font.Font("graphics/Retro Gaming.ttf", 24)
 messages = []
 
 Screen_width = 1200
@@ -106,9 +107,6 @@ def draw_background():
             if background[x, y] == 1:
                 draw_image(IMAGES["grass"], (x+5) * 40 + 20, (y) * 40 + 20, 0, 40)
 
-
-            #pygame.draw.rect(screen, (50, 50, 50), rect)  # Dark gray for empty cells
-            #pygame.draw.rect(screen, (100, 100, 100), rect, 1)  # Grid lines
     pygame.draw.rect(screen, (100,100,100), pygame.Rect(5 * 40, 0 * 40, 20 * 40+1, 20 * 40), 1)  # Outer border
 
 def draw_units():
@@ -117,43 +115,61 @@ def draw_units():
             unit_name = str(map[x, y]["Name"])
             if unit_name and unit_name in IMAGES:
                 draw_image(IMAGES[map[x,y]['Name']], (x+5) * 40 + 20, (y) * 40 + 20, 0, 32)
+
+
+
+
+def draw_turn_stuff(x, y):
+    global map, turn_order, turn, full_turn
+    pygame.draw.rect(screen, (80, 80, 100), pygame.Rect(1000, 0, 200, 140)) 
+    pygame.draw.rect(screen, (40, 40, 50), pygame.Rect(1065, 38, 68, 68))
+    name = str(map[x, y]["Name"])
+    name = name.replace("_", " ")
+    draw_text(name, pixel_font, (255, 255, 255), 1100, 20)
+    draw_image(IMAGES[map[x,y]['Name']], 1100, 70, 0, 64)
+    pygame.draw.rect(screen, (50, 30, 40), pygame.Rect(1002, 138, 198, 32),4) 
+    pygame.draw.rect(screen, (200, 0, 0), pygame.Rect(1004, 142, 194*(map[x,y]['Health']/map[x,y]['Maxhealth']), 24)) 
+    draw_text(f'{map[x,y]['Health']}/{map[x,y]['Maxhealth']}', pixel_font,(255, 200, 200), 1100, 154)
+
+
+
+
                 
-def Next_turn():
-    global map
+def Next_full_turn():
+    global map, turn_order, turn, full_turn, round_number
+    full_turn = 0
+    round_number +=1
+    turn= 0
     speed_list = []
     for y in range(20):
         for x in range(20):
             if map[x, y]['Name'] != '':
                 speed_list.append((map[x, y]['Speed'], x, y))
-    for speed, x, y in sorted(speed_list, reverse=True):
-        turn(x, y)
+    random.shuffle(speed_list)
+    turn_order = sorted(speed_list, reverse=True)
+        
 
-def turn(x, y):
-    global map
-    #if enemy not in range move towards enemy
-    move(x, y, map[x, y]['Speed'], map[x,y]['abilities'], map[x, y]['Faction'])
-    #attack if enemy in range
-    use_abilties(x, y, map[x, y]['Abilities'], map[x, y]['Faction'])
+def unit_turn():
+    global map, turn_order, turn, full_turn
+    if turn < len(turn_order):
+        x, y = turn_order[turn][1], turn_order[turn][2]
+    
+    draw_turn_stuff(x, y)
 
-def move(x, y, speed, abilities, faction):
-    global map
-    distance_map = np.full((20, 20), np.inf)
-    distance_map[x, y] = 0
-    for i in range(x):
-        for j in range(y):
-            if map[i, j]['Name'] != '':
-                distance_map[i, j] = -1
+
+
+
     
     
     
 
 
 def game_loop():
-
+    global running, full_turn, round_number
     # Main loop
     running = True
-    turn= 0
-
+    
+    full_turn = 1; round_number = 0
     define_background()
     create_unit(1, 0, 5, 5)
     create_unit(0, 1, 2, 2)
@@ -162,17 +178,16 @@ def game_loop():
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    turn += 1
-                    Next_turn()
 
 
+        if full_turn == 1:
+            Next_full_turn()
+            
 
         screen.fill((20,20,20)) 
         draw_background()
         draw_units()
-        
+        unit_turn()
             
         
 
