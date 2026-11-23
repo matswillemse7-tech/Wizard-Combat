@@ -34,7 +34,9 @@ unit_statss(1, "green_wiz", 70, ["fireball", "lightning"], 5)
 unit_statss(2, "purple_wiz", 60, ["fireball"], 6)
 unit_statss(3, "orange_wiz", 90, ["fireball"], 4)
 
-color_map_main = {
+def def_collermaps():
+    global color_map_main, color_map_second
+    color_map_main = {
         'water': (100, 130, 220),        # blue
         'fire': (220, 170, 0),        # red
         'plant': (156, 220, 156),        # green
@@ -46,13 +48,29 @@ color_map_main = {
         'dark': (50, 30, 60), #deep purple
         'air': (200, 220, 228), #light cyanblue
         'technology': (130, 118, 110) #brown
-    }
+        }
+
+
+    color_map_second = {
+        'water': (90, 120, 200),        # blue
+        'fire': (200, 155, 0),        # red
+        'plant': (140, 200, 140),        # green
+        'lightning': (200, 200, 0),      # yellow
+        'ice': (180, 180, 233),        # blue
+        'earth': (137, 131, 121),        # brown
+        'blood': (146, 90, 90),        # red
+        'holy': (245, 245, 170),      # yellow
+        'dark': (40, 20, 50), #deep purple
+        'air': (180, 200, 208), #light cyanblue
+        'technology': (120, 110, 103) #brown
+        }
 
 ability = np.dtype([
     ('Name', np.object_),
     ('Damage', np.object_),
     ('Type', np.object_),
     ('Purpose', np.object_),
+    ('Attributes', np.object_),
     ('Range', np.uint8),
     ('Cooldown', np.uint8)])
 

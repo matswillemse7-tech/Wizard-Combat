@@ -3,6 +3,7 @@ import numpy as np
 import random
 import os
 from unit_stats import unit_stats
+from unit_stats import def_collermaps
 from collections import deque
 
 
@@ -192,7 +193,9 @@ def game_loop():
     running = True
     see_faction = True
     full_turn = 1; round_number = 0
+    def_collermaps
     define_background()
+    
     create_unit(1, 2, 5, 5)
     create_unit(0, 1, 2, 2)
 
