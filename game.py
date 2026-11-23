@@ -126,7 +126,7 @@ def draw_units():
 
 
 def draw_turn_stuff(x, y):
-    global map, turn_order, turn, full_turn
+    global map, turn_order, turn, full_turn, color_map_main, color_map_secondary
     pygame.draw.rect(screen, (80, 80, 100), pygame.Rect(1000, 0, 200, 140)) 
     pygame.draw.rect(screen, (40, 40, 50), pygame.Rect(1065, 38, 68, 68))
     name = str(map[x, y]["Name"])
@@ -138,8 +138,11 @@ def draw_turn_stuff(x, y):
     draw_text(f'{map[x,y]['Health']}/{map[x,y]['Maxhealth']}', pixel_font,(255, 200, 200), 1100, 154)
     if map[x,y]['Abilities'] != 0:
         for i, ability in enumerate(map[x,y]['Abilities']):
+            print(ability)
             pygame.draw.rect(screen, (80, 80, 100), pygame.Rect(1004, 175+(i*124), 192, 120))
-            pygame.draw.rect(screen, (60, 60, 100), pygame.Rect(1004, 175+(i*124), 192, 120), 4)   
+            pygame.draw.rect(screen, (60, 60, 100), pygame.Rect(1004, 175+(i*124), 192, 120), 4)
+            name = str(ability["Name"]); name = name.replace("_", " ")
+            draw_text(name, pixel_font, (color_map_main[ability['Type']]),1080, 190+(i*124))  
 
 
 
