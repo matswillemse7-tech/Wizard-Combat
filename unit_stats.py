@@ -34,7 +34,19 @@ unit_statss(1, "green_wiz", 70, ["fireball", "lightning"], 5)
 unit_statss(2, "purple_wiz", 60, ["fireball"], 6)
 unit_statss(3, "orange_wiz", 90, ["fireball"], 4)
 
-
+color_map_main = {
+        'water': (100, 130, 220),        # blue
+        'fire': (220, 170, 0),        # red
+        'plant': (156, 220, 156),        # green
+        'lightning': (220, 220, 0),      # yellow
+        'ice': (200, 200, 255),        # blue
+        'earth': (150, 144, 133),        # brown
+        'blood': (160, 100, 100),        # red
+        'holy': (255, 255, 180),      # yellow
+        'dark': (50, 30, 60), #deep purple
+        'air': (200, 220, 228), #light cyanblue
+        'technology': (130, 118, 110) #brown
+    }
 
 ability = np.dtype([
     ('Name', np.object_),
