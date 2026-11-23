@@ -3,7 +3,7 @@ import numpy as np
 import random
 import os
 from unit_stats import unit_stats
-from unit_stats import def_collermaps
+
 from collections import deque
 
 
@@ -123,7 +123,39 @@ def draw_units():
                 draw_image(IMAGES['friend'], (x+5) * 40 + 28, (y) * 40 + 12, 0, 32)
                 
 
+def def_collermaps():
+    global color_map_main, color_map_second
+    color_map_main = {
+        'physical': (130, 130, 130),        # gray
+        'water': (100, 130, 220),        # blue
+        'fire': (220, 170, 0),        # red
+        'plant': (156, 220, 156),        # green
+        'lightning': (220, 220, 0),      # yellow
+        'ice': (200, 200, 255),        # blue
+        'earth': (150, 144, 133),        # brown
+        'blood': (160, 100, 100),        # red
+        'holy': (255, 255, 180),      # yellow
+        'dark': (50, 30, 60), #deep purple
+        'air': (200, 220, 228), #light cyanblue
+        'technology': (130, 118, 110) #brown
+        }
 
+
+    color_map_second = {
+        'physical': (115, 115, 115),        # gray
+        'water': (90, 120, 200),        # blue
+        'fire': (200, 155, 0),        # red
+        'plant': (140, 200, 140),        # green
+        'lightning': (200, 200, 0),      # yellow
+        'ice': (180, 180, 233),        # blue
+        'earth': (137, 131, 121),        # brown
+        'blood': (146, 90, 90),        # red
+        'holy': (245, 245, 170),      # yellow
+        'dark': (40, 20, 50), #deep purple
+        'air': (180, 200, 208), #light cyanblue
+        'technology': (120, 110, 103) #brown
+        }
+  
 
 def draw_turn_stuff(x, y):
     global map, turn_order, turn, full_turn, color_map_main, color_map_secondary
@@ -138,11 +170,10 @@ def draw_turn_stuff(x, y):
     draw_text(f'{map[x,y]['Health']}/{map[x,y]['Maxhealth']}', pixel_font,(255, 200, 200), 1100, 154)
     if map[x,y]['Abilities'] != 0:
         for i, ability in enumerate(map[x,y]['Abilities']):
-            print(ability)
             pygame.draw.rect(screen, (80, 80, 100), pygame.Rect(1004, 175+(i*124), 192, 120))
             pygame.draw.rect(screen, (60, 60, 100), pygame.Rect(1004, 175+(i*124), 192, 120), 4)
-            name = str(ability["Name"]); name = name.replace("_", " ")
-            draw_text(name, pixel_font, (color_map_main[ability['Type']]),1080, 190+(i*124))  
+            name = str(ability["Name"].item()); name = name.replace("_", " ")
+            draw_text(name, pixel_font, (color_map_main[str(ability['Type'].item())]),1100, 190+(i*124))  
 
 
 
@@ -196,9 +227,9 @@ def game_loop():
     running = True
     see_faction = True
     full_turn = 1; round_number = 0
-    def_collermaps
-    define_background()
     
+    define_background()
+    def_collermaps()
     create_unit(1, 2, 5, 5)
     create_unit(0, 1, 2, 2)
 
