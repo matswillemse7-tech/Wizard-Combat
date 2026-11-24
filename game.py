@@ -252,8 +252,8 @@ def game_loop():
     default_text_color = (200,200,200)
     define_background()
     def_collermaps()
-    create_unit(1, 2, 5, 5)
-    create_unit(0, 1, 2, 2)
+    create_unit(1, 1, 5, 5)
+    create_unit(0, 2, 2, 2)
 
     while running:
         for event in pygame.event.get():
