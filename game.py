@@ -19,6 +19,7 @@ title_font = pygame.font.Font(None, 74)
 text_font = pygame.font.Font(None, 36)
 bold_font = pygame.font.Font(None, 44)
 pixel_font = pygame.font.Font("graphics/Retro Gaming.ttf", 24)
+pixel_font_small = pygame.font.Font("graphics/Retro Gaming.ttf", 12)
 messages = []
 
 Screen_width = 1200
@@ -158,7 +159,7 @@ def def_collermaps():
   
 
 def draw_turn_stuff(x, y):
-    global map, turn_order, turn, full_turn, color_map_main, color_map_secondary
+    global map, turn_order, turn, full_turn, color_map_main, color_map_secondary, default_text_color
     pygame.draw.rect(screen, (80, 80, 100), pygame.Rect(1000, 0, 200, 140)) 
     pygame.draw.rect(screen, (40, 40, 50), pygame.Rect(1065, 38, 68, 68))
     name = str(map[x, y]["Name"])
@@ -173,7 +174,8 @@ def draw_turn_stuff(x, y):
             pygame.draw.rect(screen, (80, 80, 100), pygame.Rect(1004, 175+(i*124), 192, 120))
             pygame.draw.rect(screen, (60, 60, 100), pygame.Rect(1004, 175+(i*124), 192, 120), 4)
             name = str(ability["Name"].item()); name = name.replace("_", " ")
-            draw_text(name, pixel_font, (color_map_main[str(ability['Type'].item())]),1100, 190+(i*124))  
+            draw_text(name, pixel_font, (color_map_main[str(ability['Type'].item())]),1100, 190+(i*124)) 
+            draw_text(ability["Range"].item(), pixel_font_small, (default_text_color),1150, 205+(i*124))
 
 
 
@@ -221,13 +223,13 @@ def key_toggles():
 
 
 def game_loop():
-    global running, full_turn, round_number, mouse_buttons, keys,see_faction, key_pressed
+    global running, full_turn, round_number, mouse_buttons, keys,see_faction, key_pressed, default_text_color
     key_pressed = [0]
     # Main loop
     running = True
     see_faction = True
     full_turn = 1; round_number = 0
-    
+    default_text_color = (120,120,120)
     define_background()
     def_collermaps()
     create_unit(1, 2, 5, 5)
