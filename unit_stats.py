@@ -39,8 +39,12 @@ def ability_stats(Name):
 ability_statsss = np.zeros((100), dtype=ability)
 def ability_statss(i, Name, Damage, Range, Cooldown, Purpose, Attributes, Type):
     global ability_statsss
+    damages = np.zeros((1), dtype=damage)
+    damages["Min"]=Damage[0]
+    damages["Max"]=Damage[1]
+    damages["Type"]=Damage[2]
     ability_statsss[i]['Name'] = Name
-    ability_statsss[i]['Damage'] = Damage
+    ability_statsss[i]['Damage'] = damages
     ability_statsss[i]['Type'] = Type
     ability_statsss[i]['Range'] = Range
     ability_statsss[i]['Purpose'] = Purpose

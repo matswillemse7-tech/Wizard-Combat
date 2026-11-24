@@ -8,6 +8,7 @@ from collections import deque
 
 
 pygame.init()
+pygame.display.set_caption("Rifty Wizards")
 screen = pygame.display.set_mode((1200, 800))
 pygame.display.set_caption("Pygame Window")
 clock = pygame.time.Clock()
@@ -19,7 +20,9 @@ title_font = pygame.font.Font(None, 74)
 text_font = pygame.font.Font(None, 36)
 bold_font = pygame.font.Font(None, 44)
 pixel_font = pygame.font.Font("graphics/Retro Gaming.ttf", 24)
-pixel_font_small = pygame.font.Font("graphics/Retro Gaming.ttf", 12)
+pixel_font_tiny = pygame.font.Font("graphics/Retro Gaming.ttf", 12)
+pixel_font_small = pygame.font.Font("graphics/Retro Gaming.ttf", 18)
+pixel_font_smalll = pygame.font.Font("graphics/Retro Gaming.ttf", 16)
 messages = []
 
 Screen_width = 1200
@@ -33,7 +36,21 @@ for filename in os.listdir(GRAPHICS_DIR):
         path = os.path.join(GRAPHICS_DIR, filename)
         IMAGES[name] = pygame.image.load(path).convert_alpha()
 
+ability = np.dtype([
+    ('Name', np.object_),
+    ('Damage', np.object_),
+    ('Type', np.object_),
+    ('Purpose', np.object_),
+    ('Attributes', np.object_),
+    ('Range', np.uint8),
+    ('Cooldown', np.uint8),
+    ('Cooldown_current', np.uint8)
+    ])
 
+damage = np.dtype([
+    ('Min', np.uint8),
+    ('Max', np.uint8),
+    ('Type', np.object_)])
 
 
 
@@ -138,7 +155,8 @@ def def_collermaps():
         'holy': (255, 255, 180),      # yellow
         'dark': (50, 30, 60), #deep purple
         'air': (200, 220, 228), #light cyanblue
-        'technology': (130, 118, 110) #brown
+        'technology': (130, 118, 110), #brown
+        'psychic': (174, 107, 207)#pruplels
         }
 
 
@@ -154,7 +172,8 @@ def def_collermaps():
         'holy': (245, 245, 170),      # yellow
         'dark': (40, 20, 50), #deep purple
         'air': (180, 200, 208), #light cyanblue
-        'technology': (120, 110, 103) #brown
+        'technology': (120, 110, 103), #brown
+        'psychic': (150, 97, 180)#pruplels
         }
   
 
@@ -172,11 +191,12 @@ def draw_turn_stuff(x, y):
     if map[x,y]['Abilities'] != 0:
         for i, ability in enumerate(map[x,y]['Abilities']):
             pygame.draw.rect(screen, (80, 80, 100), pygame.Rect(1004, 175+(i*124), 192, 120))
-            pygame.draw.rect(screen, (60, 60, 100), pygame.Rect(1004, 175+(i*124), 192, 120), 4)
+            pygame.draw.rect(screen, (color_map_second[ability["Type"].item()]), pygame.Rect(1004, 175+(i*124), 192, 120), 4)
             name = str(ability["Name"].item()); name = name.replace("_", " ")
             draw_text(name, pixel_font, (color_map_main[str(ability['Type'].item())]),1100, 190+(i*124)) 
-            draw_text(ability["Range"].item(), pixel_font_small, (default_text_color),1150, 205+(i*124))
-
+            draw_text(f"r:{str(ability["Range"].item())}", pixel_font_small, (default_text_color),1150, 212+(i*124), False)
+            color2 = np.zeros((1), dtype= damage); color2[0] = ability["Damage"];color = color_map_main[(str(color2["Type"].item()))]; damages = f'{color2["Min"].item()}-{color2["Max"].item()} {color2["Type"].item()}';damages = damages.replace("_", " ");damages = damages.replace("[", " ");damages = damages.replace("]", " ");damages = damages.replace(",", ""); damages = damages.replace("(", " ");damages = damages.replace(")", " ");damages = damages.replace("'", " ")
+            draw_text(damages, pixel_font_smalll,(color),1015, 210+(i*124), False)
 
 
 
@@ -229,7 +249,7 @@ def game_loop():
     running = True
     see_faction = True
     full_turn = 1; round_number = 0
-    default_text_color = (120,120,120)
+    default_text_color = (200,200,200)
     define_background()
     def_collermaps()
     create_unit(1, 2, 5, 5)
