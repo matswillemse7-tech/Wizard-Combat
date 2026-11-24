@@ -197,8 +197,8 @@ def draw_turn_stuff(x, y):
             draw_text(f"r:{str(ability["Range"].item())}", pixel_font_small, (default_text_color),1150, 212+(i*124), False)
             color2 = np.zeros((1), dtype= damage); color2[0] = ability["Damage"];color = color_map_main[(str(color2["Type"].item()))]; damages = f'{color2["Min"].item()}-{color2["Max"].item()} {color2["Type"].item()}';damages = damages.replace("_", " ");damages = damages.replace("[", " ");damages = damages.replace("]", " ");damages = damages.replace(",", ""); damages = damages.replace("(", " ");damages = damages.replace(")", " ");damages = damages.replace("'", " ")
             draw_text(damages, pixel_font_smalll,(color),1015, 210+(i*124), False)
-            print(Where_to_move(x,y,map[x,y]['Speed']))
-
+            
+# dit moet beter kunnen:
 def Where_to_move(x,y,speed):
     global map
     if speed <1:
