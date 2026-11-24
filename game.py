@@ -197,6 +197,38 @@ def draw_turn_stuff(x, y):
             draw_text(f"r:{str(ability["Range"].item())}", pixel_font_small, (default_text_color),1150, 212+(i*124), False)
             color2 = np.zeros((1), dtype= damage); color2[0] = ability["Damage"];color = color_map_main[(str(color2["Type"].item()))]; damages = f'{color2["Min"].item()}-{color2["Max"].item()} {color2["Type"].item()}';damages = damages.replace("_", " ");damages = damages.replace("[", " ");damages = damages.replace("]", " ");damages = damages.replace(",", ""); damages = damages.replace("(", " ");damages = damages.replace(")", " ");damages = damages.replace("'", " ")
             draw_text(damages, pixel_font_smalll,(color),1015, 210+(i*124), False)
+            print(Where_to_move(x,y,map[x,y]['Speed']))
+
+def Where_to_move(x,y,speed):
+    global map
+    if speed <1:
+        speed = 1
+    movemap = np.zeros((20,20))
+    myfaction = map[x,y]['Faction']
+    for x1,mapx in enumerate(map):
+        for y1,mapy in enumerate(mapx):
+            movemap[x1, y1] = 500
+            if mapy['Faction'] != myfaction & mapy['Faction'] != 0:
+                movemap[x1, y1] = -1
+    movemap[x,y] = 0
+    
+    for i in range(speed):
+        for x2 in range(20):
+            for y2 in range(20): 
+                if y2+1 != 20:
+                    if (movemap[x2, y2+1] < movemap[x2, y2] )& (not movemap[x2, y2+1] ==-1):
+                         movemap[x2, y2] = movemap[x2, y2+1]+1
+                if y2-1 != -1:
+                    if  (movemap[x2, y2-1] < movemap[x2, y2] )& (not movemap[x2, y2-1] ==-1):
+                        movemap[x2, y2] = movemap[x2, y2 - 1] + 1
+                if x2+1 != 20:
+                    if  (movemap[x2+1, y2] < movemap[x2, y2] )& (not movemap[x2+1, y2] ==-1):
+                        movemap[x2, y2] = movemap[x2 + 1, y2] + 1
+                if x2-1 != -1:
+                    if  (movemap[x2-1, y2] < movemap[x2, y2] )& (not movemap[x2-1, y2] ==-1):
+                        movemap[x2, y2] = movemap[x2 - 1, y2] + 1
+    return movemap
+
 
 
 
