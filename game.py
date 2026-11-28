@@ -203,30 +203,28 @@ def Where_to_move(x,y,speed):
     global map
     if speed <1:
         speed = 1
-    movemap = np.zeros((20,20))
+    movemap = np.full((20, 20), 500, dtype=np.int32)
     myfaction = map[x,y]['Faction']
-    for x1,mapx in enumerate(map):
-        for y1,mapy in enumerate(mapx):
-            movemap[x1, y1] = 500
-            if mapy['Faction'] != myfaction & mapy['Faction'] != 0:
-                movemap[x1, y1] = -1
-    movemap[x,y] = 0
+    factions = map["Faction"]
+    blocked = (factions != myfaction) & (factions != 0)
+    movemap[blocked] = -1
+
+    movemap[x, y] = 0
     
-    for i in range(speed):
-        for x2 in range(20):
-            for y2 in range(20): 
-                if y2+1 != 20:
-                    if (movemap[x2, y2+1] < movemap[x2, y2] )& (not movemap[x2, y2+1] ==-1):
-                         movemap[x2, y2] = movemap[x2, y2+1]+1
-                if y2-1 != -1:
-                    if  (movemap[x2, y2-1] < movemap[x2, y2] )& (not movemap[x2, y2-1] ==-1):
-                        movemap[x2, y2] = movemap[x2, y2 - 1] + 1
-                if x2+1 != 20:
-                    if  (movemap[x2+1, y2] < movemap[x2, y2] )& (not movemap[x2+1, y2] ==-1):
-                        movemap[x2, y2] = movemap[x2 + 1, y2] + 1
-                if x2-1 != -1:
-                    if  (movemap[x2-1, y2] < movemap[x2, y2] )& (not movemap[x2-1, y2] ==-1):
-                        movemap[x2, y2] = movemap[x2 - 1, y2] + 1
+    queue = deque([(x, y, 0)])
+    directions = ((-1, 0), (1, 0), (0, -1), (0, 1))
+
+    while queue:
+        cx, cy, dist = queue.popleft()
+        if dist >= speed:
+            continue
+
+        next_dist = dist + 1
+        for dx, dy in directions:
+            nx, ny = cx + dx, cy + dy
+            if 0 <= nx < 20 and 0 <= ny < 20 and movemap[nx, ny] == 500:
+                movemap[nx, ny] = next_dist
+                queue.append((nx, ny, next_dist))
     return movemap
 
 
